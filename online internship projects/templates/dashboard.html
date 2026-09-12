@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CyberRisk | Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="topbar">
+
+    <div class="top-logo">
+
+        <span class="logo-shield">🛡</span>
+
+        <div>
+
+            <strong>CYBERRISK</strong>
+
+            <small>
+                VAPT & GRC
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="analyst">
+
+        <div class="online-dot"></div>
+
+        Security Analyst
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================= MAIN LAYOUT ================= -->
+
+<div class="layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+
+        <div class="menu-title">
+            SECURITY CENTER
+        </div>
+
+
+        <a href="#dashboard"
+           class="menu active">
+
+            <span>▣</span>
+
+            Dashboard
+
+        </a>
+
+
+        <a href="#findings"
+           class="menu">
+
+            <span>⚠</span>
+
+            VAPT Findings
+
+        </a>
+
+
+        <a href="#risk"
+           class="menu">
+
+            <span>◈</span>
+
+            GRC Risk
+
+        </a>
+
+
+        <a href="{{ url_for('export_csv') }}"
+           class="menu">
+
+            <span>⇩</span>
+
+            Reports
+
+        </a>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="authorized">
+
+                🔒
+
+                <span>
+                    Authorized Lab Only
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <main class="content">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="small-label">
+                    SECURITY OPERATIONS
+                </span>
+
+                <h1>
+                    Security Dashboard
+                </h1>
+
+                <p>
+                    Monitor vulnerabilities and manage security risks.
+                </p>
+
+            </div>
+
+
+            <a href="#add-finding"
+               class="primary-button">
+
+                + Add Vulnerability
+
+            </a>
+
+        </div>
+
+
+
+        <!-- ================= STAT CARDS ================= -->
+
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+                    ◉
+                </div>
+
+                <div>
+
+                    <span>
+                        TOTAL FINDINGS
+                    </span>
+
+                    <strong>
+                        {{ total }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange">
+                    ⚠
+                </div>
+
+                <div>
+
+                    <span>
+                        HIGH RISK
+                    </span>
+
+                    <strong>
+                        {{ high }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon red">
+                    !
+                </div>
+
+                <div>
+
+                    <span>
+                        CRITICAL
+                    </span>
+
+                    <strong>
+                        {{ critical }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+                    ✓
+                </div>
+
+                <div>
+
+                    <span>
+                        OPEN ITEMS
+                    </span>
+
+                    <strong>
+                        {{ open_count }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================= ADD FINDING ================= -->
+
+        <section
+            class="panel add-panel"
+            id="add-finding">
+
+
+            <div class="panel-title">
+
+                <div>
+
+                    <span class="section-label">
+                        VAPT MODULE
+                    </span>
+
+                    <h2>
+                        Add Vulnerability Finding
+                    </h2>
+
+                </div>
+
+                <span class="module-badge">
+                    VAPT
+                </span>
+
+            </div>
+
+
+
+            <form
+                method="POST"
+                action="{{ url_for('add_finding') }}"
+                class="finding-form">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Asset / Target
+                    </label>
+
+                    <input
+                        type="text"
+                        name="asset"
+                        placeholder="e.g. Localhost / Lab Server"
+                        required
+                    >
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label>
+                        Vulnerability
+                    </label>
+
+                    <select
+                        name="vulnerability"
+                        required>
+
+                        <option>
+                            Open SSH Port
+                        </option>
+
+                        <option>
+                            HTTP Service Exposed
+                        </option>
+
+                        <option>
+                            Service Version Disclosure
+                        </option>
+
+                        <option>
+                            Unnecessary Service
+                        </option>
+
+                        <option>
+                            Weak Security Configuration
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Likelihood
+                        </label>
+
+                        <select name="likelihood">
+
+                            <option value="1">
+                                1 - Very Low
+                            </option>
+
+                            <option value="2">
+                                2 - Low
+                            </option>
+
+                            <option value="3" selected>
+                                3 - Medium
+                            </option>
+
+                            <option value="4">
+                                4 - High
+                            </option>
+
+                            <option value="5">
+                                5 - Very High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Impact
+                        </label>
+
+                        <select name="impact">
+
+                            <option value="1">
+                                1 - Very Low
+                            </option>
+
+                            <option value="2">
+                                2 - Low
+                            </option>
+
+                            <option value="3" selected>
+                                3 - Medium
+                            </option>
+
+                            <option value="4">
+                                4 - High
+                            </option>
+
+                            <option value="5">
+                                5 - Very High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label>
+                        Evidence / Observation
+                    </label>
+
+                    <textarea
+                        name="evidence"
+                        placeholder="Describe the observation from your authorized VAPT assessment..."
+                        required></textarea>
+
+                </div>
+
+
+
+                <div class="form-footer">
+
+                    <span class="risk-info">
+                        Risk Score = Likelihood × Impact
+                    </span>
+
+                    <button
+                        type="submit"
+                        class="primary-button">
+
+                        Save Finding →
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </section>
+
+
+
+        <!-- ================= FINDINGS ================= -->
+
+        <section
+            class="panel"
+            id="findings">
+
+
+            <div class="panel-title">
+
+                <div>
+
+                    <span class="section-label">
+                        VULNERABILITY MANAGEMENT
+                    </span>
+
+                    <h2>
+                        VAPT Findings
+                    </h2>
+
+                </div>
+
+
+                <a href="{{ url_for('export_csv') }}"
+                   class="secondary-button">
+
+                    ↓ Export CSV
+
+                </a>
+
+            </div>
+
+
+
+            {% if findings %}
+
+
+            <div class="table-container">
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Asset</th>
+
+                            <th>Vulnerability</th>
+
+                            <th>Risk</th>
+
+                            <th>Evidence</th>
+
+                            <th>GRC Control</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                    {% for finding in findings %}
+
+                    <tr>
+
+
+                        <td>
+                            #{{ finding.id }}
+                        </td>
+
+
+                        <td>
+                            <strong>
+                                {{ finding.asset }}
+                            </strong>
+                        </td>
+
+
+                        <td>
+
+                            {{ finding.vulnerability }}
+
+                            <small class="score-detail">
+
+                                L{{ finding.likelihood }}
+                                ×
+                                I{{ finding.impact }}
+
+                            </small>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="risk-badge
+                                risk-{{ finding.risk_level|lower }}">
+
+                                {{ finding.risk_level }}
+
+                                <small>
+                                    {{ finding.score }}
+                                </small>
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="evidence-text">
+
+                                {{ finding.evidence }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="control-text">
+
+                                {{ finding.recommendation }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if finding.status == "Open" %}
+
+                            <span class="status-open">
+                                ● Open
+                            </span>
+
+                            {% else %}
+
+                            <span class="status-resolved">
+                                ✓ Resolved
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="actions">
+
+                                <a
+                                    href="{{ url_for('resolve_finding', finding_id=finding.id) }}"
+                                    class="action-button">
+
+                                    {% if finding.status == "Open" %}
+                                    Resolve
+                                    {% else %}
+                                    Reopen
+                                    {% endif %}
+
+                                </a>
+
+
+                                <a
+                                    href="{{ url_for('delete_finding', finding_id=finding.id) }}"
+                                    class="delete-button">
+
+                                    Delete
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🛡
+                </div>
+
+                <h3>
+                    No vulnerabilities recorded
+                </h3>
+
+                <p>
+                    Add your first authorized VAPT finding above.
+                </p>
+
+            </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+
+        <!-- ================= GRC SECTION ================= -->
+
+        <section
+            class="grc-section"
+            id="risk">
+
+
+            <div class="grc-header">
+
+                <div>
+
+                    <span class="section-label">
+                        GRC MODULE
+                    </span>
+
+                    <h2>
+                        Risk Management Framework
+                    </h2>
+
+                    <p>
+                        VAPT findings are converted into risk-based
+                        information for security decision making.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="grc-flow">
+
+
+                <div class="flow-step">
+
+                    <div class="flow-number">
+                        01
+                    </div>
+
+                    <strong>
+                        Identify
+                    </strong>
+
+                    <span>
+                        Vulnerability
+                    </span>
+
+                </div>
+
+
+                <div class="flow-arrow">
+                    →
+                </div>
+
+
+                <div class="flow-step">
+
+                    <div class="flow-number">
+                        02
+                    </div>
+
+                    <strong>
+                        Assess
+                    </strong>
+
+                    <span>
+                        Likelihood & Impact
+                    </span>
+
+                </div>
+
+
+                <div class="flow-arrow">
+                    →
+                </div>
+
+
+                <div class="flow-step">
+
+                    <div class="flow-number">
+                        03
+                    </div>
+
+                    <strong>
+                        Prioritize
+                    </strong>
+
+                    <span>
+                        Risk Level
+                    </span>
+
+                </div>
+
+
+                <div class="flow-arrow">
+                    →
+                </div>
+
+
+                <div class="flow-step">
+
+                    <div class="flow-number">
+                        04
+                    </div>
+
+                    <strong>
+                        Remediate
+                    </strong>
+
+                    <span>
+                        Security Control
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+        <footer>
+
+            CYBERRISK © 2026
+            •
+            VAPT & GRC Security Assessment Tool
+            •
+            Authorized Use Only
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

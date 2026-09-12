@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CyberRisk | Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body class="login-body">
+
+
+<div class="login-container">
+
+
+    <!-- Logo -->
+
+    <div class="brand-logo">
+
+        <div class="shield">
+            🛡
+        </div>
+
+        <h1>CYBERRISK</h1>
+
+        <p>VAPT & GRC SECURITY PLATFORM</p>
+
+    </div>
+
+
+    <!-- Login Card -->
+
+    <div class="login-card">
+
+        <h2>Security Analyst Login</h2>
+
+        <p class="login-subtitle">
+            Authorized laboratory environment
+        </p>
+
+
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+
+            <label>
+                Username
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter username"
+                required
+            >
+
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required
+            >
+
+
+            <button
+                type="submit"
+                class="login-button">
+
+                SECURE LOGIN →
+
+            </button>
+
+
+        </form>
+
+
+        <div class="demo-login">
+
+            <span>Demo credentials</span>
+
+            <p>
+                Username: <b>admin</b>
+                <br>
+                Password: <b>admin123</b>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <p class="footer-text">
+        CyberRisk Security Assessment Platform
+    </p>
+
+
+</div>
+
+
+</body>
+
+</html>
